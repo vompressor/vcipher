@@ -40,6 +40,10 @@ func UnPaddingPKCS5(src []byte, size int) ([]byte, error) {
 }
 
 func PaddingPKCS7(src []byte, size int) []byte {
+	if src == nil {
+		return bytes.Repeat([]byte{byte(size)}, size)
+	}
+
 	padlen := 1
 	for ((len(src) + padlen) % size) != 0 {
 		padlen = padlen + 1
@@ -50,7 +54,15 @@ func PaddingPKCS7(src []byte, size int) []byte {
 }
 
 func UnPaddingPKCS7(src []byte, size int) ([]byte, error) {
+	if len(src) == 0 {
+		return nil, errors.New("invalid padding")
+	}
+
 	padlen := int(src[len(src)-1])
+
+	if padlen <= 0 {
+		return nil, errors.New("invalid padding")
+	}
 
 	pad := src[len(src)-padlen:]
 
