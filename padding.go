@@ -60,7 +60,7 @@ func UnPaddingPKCS7(src []byte, size int) ([]byte, error) {
 
 	padlen := int(src[len(src)-1])
 
-	if padlen <= 0 {
+	if padlen <= 0 || padlen > size {
 		return nil, errors.New("invalid padding")
 	}
 
